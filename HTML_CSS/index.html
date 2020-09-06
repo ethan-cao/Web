@@ -1,0 +1,25 @@
+<!DOCTYPE html> 
+<!-- 
+    use DOCTYPE to tell browser to parse it proprerly, without this, broswer use Quirks Mode 
+        with it, browser follows the relevant specifications, 
+        without it, in Quirks Mode browser uses a different rendering mode that is incompatible with some specifications.
+-->
+
+<html>
+    <head>
+        <title>HTML Test</title>
+        <script type="text/javascript" src="../lib/lodash_4.17.15.js" defer></script>
+        <link type="text/css" rel="stylesheet" href="xxx.css">
+    </head>
+    <body>
+        
+        <!-- Locate script just before </body>. This assures HTML is parsed before executing script 
+            effectively the same as putting <script defer> in <header></header>   -->
+        <script>
+        </script>
+
+        <style>
+        </style>
+
+    </body>
+</html>

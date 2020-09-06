@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<title>Progress Bar</title>
+	<body>
+
+		<button onclick="start()">Start</button>
+		<button onclick="stop()">Stop</button>
+		<button onclick="reset()">Reset</button>
+
+		<div class="bar-container">
+			<div class="bar"></div>
+		</div>
+
+		<script>
+			const bar = document.querySelector(".bar");
+
+			const interval = 100;
+			let timer = null;
+			let progress = 0;
+
+			const start = () => {
+				console.log("started"); 
+
+				timer = setInterval(() => {
+					progress++;
+
+					if (progress > 100) {
+						clearInterval(timer);
+					}
+
+					bar.style.width = progress + "%";
+				}, interval);
+			};
+
+			const stop = () => {
+				console.log("stoped");
+				clearInterval(timer);
+			};
+
+			// clear() is already defiend by browser to clear console
+			const reset = () => {
+				console.log("resetted");
+				stop();
+				progress = 0;
+				bar.style.width = progress + "%";
+			};
+		</script>
+
+		<style>
+			.bar-container {
+				width: 500px;
+				height:20px;
+				margin: 10px;
+				background-color: gray;
+				border-radius:10px;
+			}
+
+			.bar {
+				height: 100%;
+				width:0%;
+				background-color: green;
+				border-radius:10px;
+			}
+		</style>
+
+	</body>
+
+</html>

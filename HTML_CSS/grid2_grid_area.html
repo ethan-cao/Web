@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Grid Area</title>
+	</head>
+	<body>
+		<div class="challenge">
+			<div class="header">Header</div>
+			<div class="small-box-1">Small box 1</div>
+			<div class="small-box-2">Small box 2</div>
+			<div class="small-box-3">Small box 3</div>
+			<div class="main-content">Main content</div>
+			<div class="sidebar">Sidebar</div>
+			<div class="footer">Footer</div>
+		</div>
+
+		<style>
+			.challenge {
+				width: 1000px;
+				margin: 30px auto;
+
+				/* define grid, then assgin element to the grid area */
+				display: grid;
+				grid-template-rows: 100px 200px 400px 100px;
+				grid-template-columns: repeat(3, 1fr) 200px;
+				grid-gap: 30px;
+				grid-template-areas:
+					/* use . to specify a empty cell */
+					".     head  head  ."
+					"box-1 box-2 box-3 side"
+					"main  main  main  side"
+					"foot  foot  foot  foot";
+			}
+
+			.challenge > * {
+				background-color: orangered;
+				padding: 20px;
+				color: white;
+				font-size: 30px;
+				font-family: sans-serif;
+			}
+
+			.challenge > .header {
+				grid-area: head;
+			}
+
+			.challenge > .small-box-1 {
+				grid-area: box-1;
+			}
+			.challenge > .small-box-2 {
+				grid-area: box-2;
+			}
+			.challenge > .small-box-3 {
+				grid-area: box-3;
+			}
+
+			.challenge > .sidebar {
+				grid-area: side;
+			}
+
+			.challenge > .main-content {
+				grid-area: main;
+			}
+
+			.challenge > .footer {
+				grid-area: foot;
+			}
+		</style>
+	</body>
+</html>

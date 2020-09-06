@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <title>Analog Clock</title>
+</head>
+<body>
+    <div id="clock-container">
+        <svg xmlns="http://www.w3.org/2000/svg" id="clock" width="100%" height="100%" viewBox="-10 -10 520 520">
+            <circle class="periphery" cx="50em" cy="50em" r="50em"/>
+            <circle class="center" cx="50em" cy="50em" r="3em"/>
+
+            <g class="scale">
+                <line class="scale__bar" x1="50em" y1="0" x2="50em" y2="5em" transform="rotate(0)"/>
+                <line class="scale__bar" x1="50em" y1="0" x2="50em" y2="5em" transform="rotate(30)"/>
+                <line class="scale__bar" x1="50em" y1="0" x2="50em" y2="5em" transform="rotate(60)"/>
+                <line class="scale__bar" x1="50em" y1="0" x2="50em" y2="5em" transform="rotate(90)"/>
+                <line class="scale__bar" x1="50em" y1="0" x2="50em" y2="5em" transform="rotate(120)"/>
+                <line class="scale__bar" x1="50em" y1="0" x2="50em" y2="5em" transform="rotate(150)"/>
+                <line class="scale__bar" x1="50em" y1="0" x2="50em" y2="5em" transform="rotate(180)"/>
+                <line class="scale__bar" x1="50em" y1="0" x2="50em" y2="5em" transform="rotate(210)"/>
+                <line class="scale__bar" x1="50em" y1="0" x2="50em" y2="5em" transform="rotate(240)"/>
+                <line class="scale__bar" x1="50em" y1="0" x2="50em" y2="5em" transform="rotate(270)"/>
+                <line class="scale__bar" x1="50em" y1="0" x2="50em" y2="5em" transform="rotate(300)"/>
+                <line class="scale__bar" x1="50em" y1="0" x2="50em" y2="5em" transform="rotate(330)"/> 
+                
+                <g class="scale__numbers">
+                    <g class="scale__number" transform="rotate(0)"><text transform="rotate(0)">12</text></g>
+                    <g class="scale__number" transform="rotate(90)"><text transform="rotate(-90)">3</text></g>
+                    <g class="scale__number" transform="rotate(180)"><text transform="rotate(-180)">6</text></g>
+                    <g class="scale__number" transform="rotate(270)"><text transform="rotate(-270)">9</text></g>
+                    <!-- why text text rotate works without origin set -->
+                </g>
+            </g>
+            
+            <g class="hands">
+                <line class="hour" x1="0" y1="0" x2="0" y2="-20em"/> 
+                <line class="minute" x1="0" y1="0" x2="0" y2="-30em"/> 
+                <line class="second" x1="0" y1="0" x2="0" y2="-40em"/> 
+            </g>
+        </svg>  
+    </div>
+    
+    <script>
+        "use strict";
+        
+        const HOURHAND = document.querySelector(".hour");
+        const MINUTEHAND = document.querySelector(".minute");
+        const SECONDHAND = document.querySelector(".second");
+        
+        const refreshClock = () => {
+            const date = new Date();
+            let hour= date.getHours();
+            let minute = date.getMinutes();
+            let second = date.getSeconds();
+            let mSecond = date.getMilliseconds();  // use milliseconds to make it smooth
+            // console.log(`Hour: ${hour}   Minutes: ${minute}   Seconds: ${second}`);
+            
+            const secondRotation = (second * 1000 + mSecond) / 60 / 1000 * 360;
+            const minuteRotation = minute / 60 * 360;
+            const hourRotation = (hour * 60 + minute) / 12 / 60 * 360;
+            
+            SECONDHAND.setAttribute("transform", `rotate(${secondRotation})`);
+            MINUTEHAND.setAttribute("transform", `rotate(${minuteRotation})`);
+            HOURHAND.setAttribute("transform", `rotate(${hourRotation})`);
+            
+            requestAnimationFrame(refreshClock);
+        };
+        
+        window.requestAnimationFrame(refreshClock);
+    </script>
+    
+    <style>
+        #clock-container{
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            
+            font-size: 5px;
+            width: min(100vw, 100vh);
+            height: min(100vw, 100vh);
+            padding: 10em;
+
+            --radius: 50em;
+            --number-offset: 15em;
+        }
+        
+        .periphery{
+            fill:transparent;
+            stroke: silver;
+            stroke-width: 1em;
+        }
+        
+        .center{
+            fill:silver;
+        }
+        
+        .scale__bar{
+            stroke-width: 1em;
+            stroke: black;
+            transform-origin: var(--radius) var(--radius);   /* !!!no comma in between*/ 
+        }
+
+        .scale__numbers{
+            transform: translate(var(--radius), var(--number-offset)); 
+        }
+
+        .scale__number {
+            font: italic 10em serif;
+            text-anchor: middle;
+            /* 1em = 10 fold root font size = 50px */
+            /* --radius is 50em, wihch is parsed as 500 fold of root font size*/
+            transform-origin: 0 calc(var(--radius)/10 - 1.1em);
+        }
+        
+        .hands{
+            transform: translate(var(--radius), var(--radius));
+        }
+        
+        .hands>line {
+            stroke: black;
+            stroke-width: 1em;
+        }
+        
+    </style>
+</body>
+</html>

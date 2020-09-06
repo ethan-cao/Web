@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Holy Grail Layout</title>
+        <style>
+            .holyGrail{
+                min-height: 100vh;
+                display:flex;    
+                flex-direction: column;
+            }
+
+            .holyGrail-header {
+                flex:1;
+            }
+
+            .holyGrail-footer {
+                flex:1;
+            }
+
+            .holyGrail-body{
+                display: flex;
+                flex:3;
+            }
+
+            .holyGrail-body__nav {
+                background-color:bisque;
+                /* flex:0, 0, 12em; */
+                flex:1;
+            }
+
+            .holyGrail-body__content {
+                background-color: aquamarine;
+                flex:3;
+            }
+
+            .holyGrail-body__ads {
+                background-color: bisque;
+                /* flex:0, 0, 12em; */
+                flex:1;
+            }
+
+        </style>
+    </head>
+
+    <body>
+        <div class="holyGrail">
+            <div class="holyGrail-header">header</div>
+            <div class="holyGrail-body">
+                <div class="holyGrail-body__nav">nav</div>
+                <div class="holyGrail-body__content">content</div>
+                <div class="holyGrail-body__ads">ads</div>
+            </div>
+            <div class="holyGrail-footer">footer</div>
+        </div>
+    </body>
+
+</html>

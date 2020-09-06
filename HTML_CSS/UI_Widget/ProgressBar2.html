@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<title>Progress Bar</title>
+	<body>
+
+		<button onclick="start()">Start</button>
+		<button onclick="stop()">Stop</button>
+
+		<div class="bar-container">
+			<div class="bar"></div>
+		</div>
+
+		<script>
+			const bar = document.querySelector(".bar");
+
+			const duration = 5;
+
+			const start = () => {
+				console.log("started"); 
+
+				bar.style.transition = `width ${duration}s linear`;
+				bar.style.width = "100%";
+			};
+
+			const stop = () => {
+				console.log("stoped");
+			};
+		</script>
+
+		<style>
+			.bar-container {
+				width: 500px;
+				height:20px;
+				margin: 10px;
+				background-color: gray;
+				border-radius:10px;
+			}
+		
+			.bar {
+				height: 100%;
+				width:0%;
+				background-color: green;
+				border-radius:10px;
+			}
+		</style>
+
+	</body>
+</html>

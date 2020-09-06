@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<title>Tooltip</title>
+    </head>
+    
+	<body>
+        <div class="container">
+            <div class="button top" tabindex="0" data-descr="Top">Show Top</div>
+            <div class="button bottom" tabindex="0" data-descr="Bottom">Show Bottom</div>
+        </div>
+
+        <style>
+            .container {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-start;
+                width: 20em;
+                margin-top: 100px;
+            }
+
+            .button {
+                flex: 1 1 auto;
+                position: relative;
+
+                border-radius: 10px;
+                background-color: rgb(32, 206, 218);
+                padding: 20px;
+                margin: 20px;
+                text-align: center;
+            }
+
+            .button:hover {
+                cursor: help;
+            }
+
+            .button::after {
+                position: absolute;
+
+                display: none;
+                content: attr(data-descr);
+                background-color: rgb(127, 255, 189); 
+                padding: 10px;
+                border-radius: 10px;
+            }
+
+            .button:hover::after {
+                display: block;
+            }
+
+            .button.top::after {
+                top:0;
+                left: 50%;
+                transform: translate(-50%, calc(-100% - 10px));
+                /* margin-bottom: 1em; */
+            }
+
+            .button.bottom::after {
+                top: 100%;
+                left: 50%;
+                transform: translate(-50%, 10px);
+                /* margin-top: 1em; */
+            }
+
+            .button::before {
+                position: absolute;
+                display: none;
+
+                content: "";
+                background-color: rgb(127, 255, 189); 
+                width: 10px;
+                height: 10px;
+            }
+
+            .button:hover::before {
+                display: block;
+            }
+
+            .button.top::before {
+                top:0;
+                left: 50%;
+                transform: translate(-50%, calc(-100% - 5px))rotate(45deg);
+            }
+
+            .button.bottom::before {
+                top:100%;
+                left: 50%;
+                transform: translate(-50%, 5px)rotate(45deg);
+            }
+        </style>
+    </body>
+</html>

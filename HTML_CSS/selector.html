@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>HTML Test</title>
+		<style>
+			.selector-test > p::before {
+				content: " beofre + ";
+			}
+
+			.selector-test > p::after {
+				content: " + after";
+			}
+
+			.selector-test > p {
+				border: solid green;
+				width: calc(100% - 100px); /* performs a calculation */
+			}
+
+			.selector-test > p::first-letter {
+				font-size: 200%;
+			}
+
+			::selection {
+				background-color: cyan;
+			}
+
+			@media (min-width: 500px) {
+				.selector-test > p:first-child {
+					background-color: lightsalmon;
+				}
+			}
+
+			/* feature query: test if the browser supports a particular property or property */
+			@supports (display: grid) {
+				/*CSS applies only the browser supports*/
+				.selector-test {
+					display: grid;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="selector-test">
+			<!-- class name convention BEM -->
+			<p>test1</p>
+			<p>test2</p>
+			<p>test3</p>
+		</div>
+		<p></p>
+
+		<div class="c1">
+			<div class="c2"></div>
+		</div>
+
+	</body>
+</html>

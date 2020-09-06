@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Position</title>
+		<style>
+			.container {
+				background-color: hotpink;
+				width: 400px;
+				height: 11000px;
+			}
+
+			.parent {
+				background-color: green;
+				position: absolute;
+				width: 300px;
+				height: 1000px;
+			}
+
+			.child-relative {
+				background-color:teal;
+				position: relative;
+				top:20px;
+			}
+
+			.child-absolute {
+				background-color: red;
+				position: absolute;
+				top:20px;
+			}
+
+			.child-fixed {
+				background-color: aquamarine;
+				position: fixed;
+				top:20px;
+			}
+
+			.child-sticky {
+				background-color:orange;
+				position: sticky;
+				top:0;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="parent">
+				parent
+				<!-- <div class="child-relative">child-relative</div> -->
+				<!-- <div class="child-absolute">child-absolute</div> -->
+				<!-- <div class="child-fixed">child-fixed</div> -->
+				<div class="child-sticky">child-sticky</div>
+			</div>
+		</div>
+	</body>
+</html>
