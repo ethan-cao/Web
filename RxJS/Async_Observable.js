@@ -1,5 +1,4 @@
-import { Observable } from 'rxjs';    // use require("rxjs"); in Node
-
+const { Observable } = require("rxjs"); 
 
 const observable = new Observable(function subscribe(observer) {
 // constructor take a subscribe() as parameter, which has a parameter observer
@@ -15,7 +14,7 @@ const observable = new Observable(function subscribe(observer) {
         observer.error(error);
     }
 
-    // without returning unsubscribe(), subscription.unsubscribe() just cancels exexcution
+    // without returning unsubscribe(), subscription.unsubscribe() just cancels execution
     // With returning unsubscribe(), it makes possible to to cancel execution and dispose resource
     return function unsubscribe() {
         console.log("unsubscribed");
@@ -31,6 +30,7 @@ const observable = new Observable(function subscribe(observer) {
 // Subscribing to an Observable is like calling a function, providing callbacks where the data will be delivered to. (observer)
 // Observable constructor param subscribe() represents an Observable execution, it starts execution when an Observer subscribes to the Observable
 // each call to observable.subscribe(observer) creates a subscription, each subscription creates a new Observer execution 
+// Subscribing to Observable is similar to calling a function
 const subscription = observable.subscribe(
     (value) => console.log('value received from observer.next() : ', value),   // next
     (error) => console.error('Observer got an error: ' + error),               // error
@@ -44,24 +44,3 @@ const subscription = observable.subscribe(
 subscription.unsubscribe();
 
 // multiple subscriptions can be created on the same observable
-
-
-
-
-
-// 1 observable emits to 1 observer, unicast
-// 1 observable emits to many observers, multicasting
-
-
-
-
-/**
- *  Subject is a special type of Observable that allows values to be multicasted to many Observers. 
- *  It is the equivalent to an EventEmitter, and the only way of multicasting a value or event to multiple Observers
- *  While plain Observables are unicast (each subscribed Observer owns an independent execution of the Observable), Subjects are multicast.
- *  A Subject is like an Observable, but can multicast to many Observers. Subjects are like EventEmitters: they maintain a registry of many listeners.
- *  Every Subject is an Observable.
- *  Every Subject is an Observer. 
- *  To feed a new value to the Subject, just call next(theValue), and it will be multicasted to the Observers registered to listen to the Subject.
- */
-

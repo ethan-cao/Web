@@ -1,5 +1,5 @@
-import { of, from, fromEvent, timer, combineLatest } from 'rxjs';
-import { filter } from 'rxjs/operators';
+const { of, from, fromEvent, timer, combineLatest } = require('rxjs');
+const { filter } = require('rxjs/operators');
 
 
 const source0 = of({ name: 'Brian' }, [1, 2, 3], () => "Hello"); // //emits any number of provided values in sequence
