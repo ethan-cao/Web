@@ -8,7 +8,7 @@ const source = fromEvent(document, 'click'); // Turn event into observable seque
 
 
 const subscription = of(1, 2, 3, 4, 5)
-	// pipe() makes observable data consumable for operators. 
+	// pipe() makes observable data (stream)consumable for operators. 
 	.pipe(
 		debounceTime(200), // wait for a 200ms pause
 		filter(value => value >= 2)
