@@ -70,7 +70,7 @@ const requestEpic = action$ => action$.pipe(
 		const users = await axios
 			.get("https://jsonplaceholder.typicode.com/users")
 			.then((response) => response.data.map((user) => user.id));
-		return { ...action, type: FETCH_USERS_SUCCEEDED, payload: [...users] }
+		return fetchUsersSuccess(users);
 	})
 );
 

@@ -45,7 +45,7 @@ const reducer = (state = initialState, action) => {
 
 
 // Action creator, which returns an object
-const fetchUsersRequest = () => {
+const fetchUsersRequested = () => {
 	return {
 		type: FETCH_USERS_REQUESTED,
 	};
@@ -69,16 +69,15 @@ const fetchUsersFailure = (error) => {
 // since using redux-thunk, action creator can return function
 const fetchUsers = () => {
 	return (dispatch, getState) => {
-		dispatch(fetchUsersRequest());
+		dispatch(fetchUsersRequested());
 		axios
 			.get("https://jsonplaceholder.typicode.com/users")
 			.then((response) => {
-				// response.data is the users
 				const users = response.data.map((user) => user.id);
+				// delay the dispatch an action (async) for a certain amount of time
 				dispatch(fetchUsersSuccess(users));
 			})
 			.catch((error) => {
-				// error.message is the error message
 				dispatch(fetchUsersFailure(error.message));
 			});
 	};
