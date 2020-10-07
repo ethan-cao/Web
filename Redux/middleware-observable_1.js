@@ -63,16 +63,19 @@ const reducer = (state = initialState, action) => {
 	}
 };
 
+// Use state$.value to always access to the latest state
 
-const requestEpic = action$ => action$.pipe(
+const requestEpic = (action$, state$) => action$.pipe(
 	ofType(FETCH_USERS_REQUESTED),
-	mergeMap(async (action) => {
-		const users = await axios
-			.get("https://jsonplaceholder.typicode.com/users")
-			.then((response) => response.data.map((user) => user.id));
-		return fetchUsersSuccess(users);
-	})
+	map({type: "test"}),
+	// mergeMap(async (action) => {
+	// 	const users = await axios
+	// 		.get("https://jsonplaceholder.typicode.com/users")
+	// 		.then((response) => response.data.map((user) => user.id));
+	// 	return fetchUsersSuccess(users);
+	// }),
 );
+
 
 
 const epicMiddleware = createEpicMiddleware();

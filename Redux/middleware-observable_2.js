@@ -32,7 +32,7 @@ const reducer = (state = initialState, action) => {
     }
 };
 
-const countEpic = (action$, state) => action$.pipe(
+const countEpic = (action$, state$) => action$.pipe(
     ofType(NUMBER_ADDED),
     filter(action => action.payload % 2 === 0),
     mapTo({ type: EVEN_NUMBER_ADD })
