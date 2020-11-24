@@ -1,5 +1,5 @@
 /*
-Promise is an object which represents the eventual completion (or failure) of an asynchronous operation
+Promise is an object which represents the future status (completion or failure) of an asynchronous operation
 A promise object has a value and status, which could be:
     pending: initial state, neither fulfilled nor rejected. 
     fulfilled: when resolve() is first invoked, means the operation completed.
@@ -13,11 +13,13 @@ promise help to avoid nested callbacks
 
 
 
-/*  Promise construtor takes 1 parameter, an executor function 
+/*  Promise constructor takes 1 parameter, an executor function 
 
-    Executor works asynchronously, and takes 2 parameters resolve() and reject()
+    Executor works asynchronously, it takes 2 parameters fulfill() and reject()
     the first resolve/reject to be invoked determines the status of the promise
     executor is invoked only once
+
+    resolve() and reject() handle the success and failure case
 
     executor is invoked eagerly. meaning a promise starts working once the promise constructor is invoked 
     wrap executor in functions if needed to be invoked later 
@@ -25,25 +27,29 @@ promise help to avoid nested callbacks
     If an error is thrown in the executor function, the promise is rejected. 
     The return value of the executor is ignored  
 */
-const promise = new Promise((resolve, reject) => {
+const promise = new Promise((fulfill, reject) => {
   if (Math.random() * 100 < 90) {
-    resolve("90%");
+    fulfill("90%");
   }
 
   reject("10%");
   // even if resolve() is called, reject() is still get called
-  // but since the promise is already settled, subsequent reject call does nothing
+  // but since the promise is already settled, subsequent reject call does not change the promise status
 });
 
 
 
 /*
-promise does not expose its state, use promise.then(resolve(promiseValue), reject(rejectionReason)) to assess
-resolve/reject are callback functions for the success/failure cases 
-resolve/reject are called asynchronously, and are both optional, they can be called only once
-then() returns a Promise for the completion of which ever callback is executed.
+Promise does not expose its status, 
+  use promise.then(resolve(promiseValue), reject(rejectionReason)) to access/consume the internal status
+  use promise.catch(error => {}) to access error, once error occurs, then() wil be skipped
+  use promise.finally(()=>{}) to handle operation in common, regardless success or failure
 
-if resolve/reject 
+then() runs after a promise has been resolved(fulfilled or rejected) 
+fulfill()/reject() are callback function for success/failure cases, invoked asynchronously
+
+then() returns a new Promise represents the completion of either fulfill() or reject()
+if fulfill/reject 
   returns a value(v1), promise returned by promise.then() is resolved with the same value (as v1)
   returns an already fulfilled promise, the promise returned by then gets fulfilled with that promise's value as its value.
   returns an already rejected promise, the promise returned by then gets rejected with that promise's value as its value.
@@ -54,9 +60,14 @@ if resolve/reject
 */
   
 promise.then(
-  resolvedValue => console.log(resolvedValue),
+  fulfilledValue => console.log(fulfilledValue),
   rejectedValue => console.log(rejectedValue)  //  Error object is good option for rejectionReason
 );
+
+
+
+
+
 
 
 // wrap promise constructor in functions if need to be invoked later
@@ -80,7 +91,11 @@ const delay = (time) => new Promise((resolve) => setTimeout(resolve, time));
     // catch(reject) catches error thrown from both previous then(resolve, reject) and the resolve (param in then) 
     // good practice: ending all promise chains with a .catch()
     console.log("Caught an error.");
-  });
+  })
+  .finally(
+    // avoid duplicating code in both the promise's then() and catch() handlers.
+    console.log("finally")
+  );
 
 
 

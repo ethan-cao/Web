@@ -67,13 +67,17 @@ const reducer = (state = initialState, action) => {
 
 const requestEpic = (action$, state$) => action$.pipe(
 	ofType(FETCH_USERS_REQUESTED),
-	map({type: "test"}),
-	// mergeMap(async (action) => {
-	// 	const users = await axios
-	// 		.get("https://jsonplaceholder.typicode.com/users")
-	// 		.then((response) => response.data.map((user) => user.id));
-	// 	return fetchUsersSuccess(users);
-	// }),
+	mergeMap(async (action) => {
+		const users = await axios.get("https://jsonplaceholder.typicode.com/users")
+								 .then((response) => response.data.map((user) => user.id));
+		return fetchUsersSuccess(users);
+	}),
+	// alternatively
+	mergeMap(
+		(action) => from(axios.get("https://jsonplaceholder.typicode.com/users")).pipe(
+			map((response) => fetchUsersSuccess(response.data))
+		)
+	);
 );
 
 

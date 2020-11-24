@@ -7,13 +7,16 @@ const source1 = from(new Promise(resolve => resolve('Hello World!'))); // Turn a
 const source = fromEvent(document, 'click'); // Turn event into observable sequence
 
 
-const subscription = of(1, 2, 3, 4, 5)
-	// pipe() makes observable data (stream)consumable for operators. 
+const newObservable = of(1, 2, 3, 4, 5)
+	// pipe() makes observable data consumable for operator 
+	// it transform the source observable to a new observable
 	.pipe(
+		// each operator is pure fx that return a observable
 		debounceTime(200), // wait for a 200ms pause
 		filter(value => value >= 2)
-	)
-	.subscribe(value => console.log(value));  // log: 2, 3, 4, 5
+	);
+
+newObservable.subscribe(value => console.log(value));  // log: 2, 3, 4, 5
 
 
 
