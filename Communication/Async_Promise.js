@@ -1,5 +1,6 @@
 /*
 Promise is an object which represents the future status (completion or failure) of an asynchronous operation
+           a wrapper of future value
 A promise object has a value and status, which could be:
     pending: initial state, neither fulfilled nor rejected. 
     fulfilled: when resolve() is first invoked, means the operation completed.
