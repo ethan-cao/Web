@@ -24,10 +24,10 @@ const observable = new Observable(function subscribe(observer) {
 
 
 
-// Observer is a set of callbacks(next, error, complete), a consumer of values emitted by an Observable
-// observable.subscribe(observer) let Observer subscribes to Observable
-// Observer is where you react(-ive programming) to Observable, each future values
 // Subscribing to an Observable is like calling a function, providing callbacks where the data will be delivered to. (observer)
+// observable.subscribe(observer) let Observer subscribes to Observable
+// Observer is a set of callbacks(next, error, complete), a consumer of values emitted by an Observable
+// Observer is where you react(-ive programming) to Observable, each future values
 // Observable constructor param subscribe() represents an Observable execution, it starts execution when an Observer subscribes to the Observable
 // each call to observable.subscribe(observer) creates a subscription, each subscription creates a new Observer execution 
 // Subscribing to Observable is similar to calling a function

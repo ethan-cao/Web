@@ -1,7 +1,7 @@
 const { Subject, interval } = require('rxjs');
 const { multicast, refCount } = require('rxjs/operators');
 
-// A multicasted Observable uses a Subject under the hood to make multiple Observers see the same Observable execution.
+// A multi-casted Observable uses a Subject under the hood to make multiple Observers see the same Observable execution.
 
 // The 1st emission is not sent immediately, but only after the first period has passed
 const source = interval(2000);

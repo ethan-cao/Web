@@ -17,10 +17,10 @@ promise help to avoid nested callbacks
 /*  Promise constructor takes 1 parameter, an executor function 
 
     Executor works asynchronously, it takes 2 parameters fulfill() and reject()
-    the first resolve/reject to be invoked determines the status of the promise
+    the first fulfill/reject to be invoked determines the status of the promise
     executor is invoked only once
 
-    resolve() and reject() handle the success and failure case
+    fulfil and reject() handle the success and failure case
 
     executor is invoked eagerly. meaning a promise starts working once the promise constructor is invoked 
     wrap executor in functions if needed to be invoked later 
