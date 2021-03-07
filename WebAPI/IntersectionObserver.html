@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+
+    <body>
+        <img id="img-1" src="placeholder.png" data-src="img-1.jpg" />
+        <img id="img-2" src="placeholder.png" data-src="img-2.jpg" />
+        <img id="img-3" src="placeholder.png" data-src="img-3.jpg" />
+
+        <script>
+        /*
+        Asynchronously observe changes in the intersection of a target element with an ancestor element
+        */
+            // callback executes whenever 
+            //   the moment target element intersects (enters/exits) root element by threshold
+            //   the 1st time the observer is initially asked to watch a target element
+            const callback = (entries, observer) => {
+                entries.forEach(entry => {
+                    console.log("intersection: ", entry.target.getAttribute("id"))
+                });
+            };
+
+            //The degree of intersection between the target element and its root is the intersection ratio
+
+            const options = {
+                root: null,   // root element, default to viewport
+                threshold: 0, // trigger callback when 25% of target intersects root element, default to 0
+                rootMargin: "0px",  // grow or shrink root element's bounding box before computing intersections
+            };
+
+            // Typically, watch for intersection changes with regard to the element's closest scrollable ancestor
+            // or, if the element isn't a descendant of a scrollable element, the viewport. 
+
+            const interSectionObserver = new IntersectionObserver(callback, options);
+
+            interSectionObserver.observe(document.querySelector("#img-2"));
+            interSectionObserver.observe(document.querySelector("#img-3"));
+        </script>
+    </body>
+</html>
