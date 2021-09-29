@@ -1,10 +1,11 @@
 // Async/await is just syntax sugar for Promise, making asynchronous code look and behave like synchronous code
-// a sync function always returns a promise. non-promise value is wrapped in a resolved promise automatically.
-const f1 = async () => { 
-    return 1;
-};
 
-const p1 = f1();
+// a sync function always returns a promise. non-promise value is wrapped in a resolved promise automatically.
+const f1 = () => 1
+const f2 = async () => 1
+
+console.log(f1() instanceof Promise)  // false
+console.log(f2() instanceof Promise)  // true
 
 
 // async can work directly with then()
@@ -14,7 +15,7 @@ const p1 = f1();
 // it returns the resolved value of the promise, or the value itself if it's not a Promise.
 // await does not block async function's caller
 
-const f2 = async () => {
+const f3 = async () => {
     try {
         const response = await fetch('https://api.github.com/users/octocat')
         const data = response.json()
@@ -25,7 +26,7 @@ const f2 = async () => {
 };
 
 
-async function f3() {
+async function f4() {
     let promise = new Promise((resolve, reject) => {
         setTimeout(() => resolve("done!"), 2000)
     });
@@ -37,4 +38,4 @@ async function f3() {
     alert(result); // "done!"
 }
 
-f3();
+f4();
