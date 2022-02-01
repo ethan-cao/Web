@@ -1,5 +1,6 @@
 import redux from "redux";
-const { createStore, bindActionCreators } = redux; 
+
+const { createStore, bindActionCreators } = redux;
 
 const initialState = {
     todos: ["todo1"]
@@ -24,7 +25,6 @@ const store = createStore(reducer);
 
 
 // callback will be called when an action has been dispatched
-// just to notify an action was dispatched
 // store.subscribe() returns a function that you can call to cancel the subscription.
 store.subscribe(() => {
     console.log("state updated ", store.getState());  // updated state

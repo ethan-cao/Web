@@ -106,7 +106,7 @@ waitOneSecondObservable.subscribe(value => console.log(value));  // subscribe fu
 // promise.then(value => console.log(value));  // print later
 // console.log("Added in marcotask queue");    // print first
 
-// obvervable callback is synchronous
+// observable callback is synchronous
 const observable = new Observable(observer => observer.next("Observable added in Macrotask queue"));
 observable.subscribe(value => console.log(value));  // print first
 console.log("Added in marcotask queue");            // print later 
