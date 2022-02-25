@@ -8,12 +8,10 @@ console.log(f1() instanceof Promise)  // false
 console.log(f2() instanceof Promise)  // true
 
 
-// async can work directly with then()
-
 // await can only be used inside async function
-// await pause async function execution until the returned promise is resolved
-// it returns the resolved value of the promise, or the value itself if it's not a Promise.
-// await does not block async function's caller
+
+// await pause async function execution until the promise is resolved, 
+// it returns the resolved value of the promise
 
 const f3 = async () => {
     try {
