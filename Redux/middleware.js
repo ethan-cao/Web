@@ -18,8 +18,11 @@ const store = createStore(rootReducer, applyMiddleware(logger, thunk))
 // the 1st param store only has .getState() and dispatch
 // the 2nd param next passes the action to the next middleware
 const loggingMiddleware = store => next => action => {
-    console.log('action:', action)
+    console.log('state before action:', store.getState())
+
     const result = next(action)
+
     console.log('state after action:', store.getState())
+    
     return result
   }

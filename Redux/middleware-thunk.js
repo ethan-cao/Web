@@ -1,11 +1,9 @@
 import redux from "redux";
-import reduxThunk from "redux-thunk";
 import axios from "axios";
 
+import reduxThunk from "redux-thunk";
 const thunk = reduxThunk.default;
 
-// redux-thunk allows action creator to return a function rather than an action object
-// the returned function has params (dispatch, getState)
 
 // compare this example with middleware-observable_1.js
 
@@ -16,24 +14,30 @@ const initialState = {
 };
 
 // Action type
-const FETCH_USERS_REQUESTED = "FETCH_USERS_REQUESTED";
-const FETCH_USERS_SUCCEEDED = "FETCH_USERS_SUCCEEDED";
-const FETCH_USERS_FAILED = "FETCH_USERS_FAILED";
+// typical data fetching async logic includes 3 actions: pending, fulfilled, rejected
+const FETCH_USERS_PENDING = "users/fetchUsers/pending";
+const FETCH_USERS_FULFILLED = "users/fetchUsers/fulfilled";
+const FETCH_USERS_REJECTED = "users/fetchUsers/rejected";
 
 const reducer = (state = initialState, action) => {
 	switch (action.type) {
-		case FETCH_USERS_REQUESTED:
+		case FETCH_USERS_PENDING:
 			return {
 				...state,
 				loading: true,
 			};
-		case FETCH_USERS_SUCCEEDED:
+		case FETCH_USERS_FULFILLED:
+			const newUsers = {}
+
+			action.payload.forEach(todo => {
+				newUsers[todo.id] = todo
+			})
 			return {
 				loading: false,
-				users: action.payload,
+				users: newUsers,
 				error: "",
 			};
-		case FETCH_USERS_FAILED:
+		case FETCH_USERS_REJECTED:
 			return {
 				loading: false,
 				users: [],
@@ -42,51 +46,52 @@ const reducer = (state = initialState, action) => {
 	}
 };
 
+const store = redux.createStore(reducer, redux.applyMiddleware(thunk));
+store.subscribe(() => console.log("state updated: ", JSON.stringify(store.getState())));
 
 
-// Action creator, which returns an object
+
+
+// action creator, returning an object
 const fetchUsersRequested = () => {
 	return {
-		type: FETCH_USERS_REQUESTED,
+		type: FETCH_USERS_PENDING,
 	};
 };
 
 const fetchUsersSuccess = (users) => {
 	return {
-		type: FETCH_USERS_SUCCEEDED,
+		type: FETCH_USERS_FULFILLED,
 		payload: users,
 	};
 };
 
 const fetchUsersFailure = (error) => {
 	return {
-		type: FETCH_USERS_FAILED,
+		type: FETCH_USERS_REJECTED,
 		payload: error,
 	};
 };
 
-// Action creator, which returns function, the returned function is called thunk
-// since using redux-thunk, action creator can return function
-const fetchUsers = () => {
-	return (dispatch, getState) => {
+// thunk action creator, returning thunk
+const fetchUserById = (userId) => {
+	return async function thunk(dispatch, getState) {
+		const stateBefore = getState()
+
 		dispatch(fetchUsersRequested());
-		axios
-			.get("https://jsonplaceholder.typicode.com/users")
-			.then((response) => {
-				const users = response.data.map((user) => user.id);
-				// delay the dispatch an action (async) for a certain amount of time
-				dispatch(fetchUsersSuccess(users));
-			})
-			.catch((error) => {
-				dispatch(fetchUsersFailure(error.message));
-			});
+
+		try {
+			const response = await axios.get(`https://jsonplaceholder.typicode.com/users/${userId}`)
+			const users = response.data
+
+			dispatch(fetchUsersSuccess(users));
+		} catch (error) {
+			dispatch(fetchUsersFailure(error.message));
+		}
+
+		const stateAfter = getState()
 	};
 };
 
+store.dispatch(fetchUserById(1));
 
-
-
-const store = redux.createStore(reducer, redux.applyMiddleware(thunk));
-store.subscribe(() => console.log("state updated: ", store.getState()));
-
-store.dispatch(fetchUsers());
