@@ -1,0 +1,14 @@
+{
+  "name": "webgl",
+  "version": "1.0.0",
+  "description": "",
+  "main": "webGL.js",
+  "scripts": {
+    "start": "nodemon --exec http-server -c-1 -p 8080"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^2.0.15"
+  }
+}

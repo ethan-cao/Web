@@ -1,3 +1,21 @@
+function run(webGLContext, vertexShaderText, fragmentShaderText) {
+  const vertexShader = webGLContext.createShader(webGLContext.VERTEX_SHADER);
+  webGLContext.shaderSource(vertexShader, vertexShaderText);
+}
+
+const loadShadersAndRun = async () => {
+  const vertexShaderText = await (await fetch('vertexShader.glsl')).text()
+  const fragmentShaderText = await (await fetch('vertexShader.glsl')).text()
+  
+  console.log('vertexShader: ', vertexShaderText)
+  console.log('fragmentShader: ', vertexShaderText)
+  
+  // run(vertexShaderText, fragmentShaderText);
+};
+
+
+loadShadersAndRun();
+
 const canvas = document.querySelector('#test-canvas')
 const gl = canvas.getContext('webgl')
 
@@ -63,16 +81,16 @@ const vertices = [
 // create buffer
 const buffer = gl.createBuffer()
 // bind buffer to the bind point named gl.ARRAY_BUFFER, bind point is where data from CPU goes to GPU
-gl.bindBuffer(gl.ARRAY_BUFFER, buffer)  
+gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
 // send vertices in CPU to buffer in GPU through gl.ARRAY_BUFFER
 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW)
 
 
 // inform vertexShader how its attributes (input) gets value 
 // get the location of attribute position (defined in vertexShader)
-const positionAttributeLocation = gl.getAttribLocation(program, 'position') 
+const positionAttributeLocation = gl.getAttribLocation(program, 'position')
 // get the location of attribute color (defined in vertexShader)
-const colorAttributeLocation = gl.getAttribLocation(program, 'color')       
+const colorAttributeLocation = gl.getAttribLocation(program, 'color')
 // load data from
 gl.vertexAttribLocation(
   positionAttributeLocation,  // attribute location
