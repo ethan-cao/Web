@@ -1,6 +1,6 @@
 // Async/await is just syntax sugar for Promise, making asynchronous code look and behave like synchronous code
 
-// a sync function always returns a promise. non-promise value is wrapped in a resolved promise automatically.
+// a sync function returns a promise. non-promise value is wrapped in a resolved promise automatically.
 const f1 = () => 1
 const f2 = async () => 1
 

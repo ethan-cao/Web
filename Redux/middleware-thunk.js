@@ -27,11 +27,11 @@ const reducer = (state = initialState, action) => {
 				loading: true,
 			};
 		case FETCH_USERS_FULFILLED:
-			const newUsers = {}
+			const newUsers = {
+				...state.users,
+				[action.payload.id]: action.payload
+			}
 
-			action.payload.forEach(todo => {
-				newUsers[todo.id] = todo
-			})
 			return {
 				loading: false,
 				users: newUsers,

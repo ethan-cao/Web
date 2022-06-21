@@ -14,8 +14,8 @@ uniform float screenWidth;
 // all shaders have a main function
 void main() {
   // gl_Position is global var, which is used as the output of vertexShader
-  // gl_Position = vec4(position, 1);
-  gl_Position = vec4(1.0, 0.0, 0.0, 1.0);
+  gl_Position = vec4(position, 1);
+  // gl_Position = vec4(1.0, 0.0, 0.0, 1.0);
 
   // fragColor is sent to fragmentShader
   fragColor = color;

@@ -10,10 +10,10 @@ const initialState = {
 	error: "",
 };
 
-// createAsyncThunk() generates thunk that automatically dispatches "pending/fulfilled/rejected" actions
+// createAsyncThunk() generates thunk actinon that automatically dispatches "pending/fulfilled/rejected" actions
 const fetchUsers = createAsyncThunk(
-	'users/fetchUsers',
-	async function payloadCreator() {
+	'users/fetchUsers', // prefix for the generated action types
+	async function payloadCreator(args) { // https://redux-toolkit.js.org/api/createAsyncThunk#payloadcreator
 		const response = await axios.get('https://jsonplaceholder.typicode.com/users')
 		return response.data
 	}
@@ -58,5 +58,5 @@ const store = configureStore({
 
 store.subscribe(() => console.log("state updated: ", JSON.stringify(store.getState())));
 
-store.dispatch(fetchUsers());
+store.dispatch(fetchUsers({ id }));
 

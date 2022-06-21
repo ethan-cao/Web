@@ -1,5 +1,5 @@
 /*
-A promise is an object which represents the future status (completion or failure) of an asynchronous operation
+A promise is an object, representing the future status (completion/failure) of an asynchronous operation
 
 A promise object has a value, and a status which could be:
     pending: initial state, neither resolved nor rejected. 
