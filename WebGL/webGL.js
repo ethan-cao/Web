@@ -1,35 +1,21 @@
-function run(webGLContext, vertexShaderText, fragmentShaderText) {
-  const vertexShader = webGLContext.createShader(webGLContext.VERTEX_SHADER);
-  webGLContext.shaderSource(vertexShader, vertexShaderText);
-}
-
-const loadShadersAndRun = async () => {
-  const vertexShaderText = await (await fetch('vertexShader.glsl')).text()
-  const fragmentShaderText = await (await fetch('vertexShader.glsl')).text()
-  
-  console.log('vertexShader: ', vertexShaderText)
-  console.log('fragmentShader: ', vertexShaderText)
-  
-  // run(vertexShaderText, fragmentShaderText);
-};
-
-
-loadShadersAndRun();
-
-const canvas = document.querySelector('#test-canvas')
-const gl = canvas.getContext('webgl')
+const canvas = document.querySelector('#canvas')
+const gl = canvas.getContext('webgl2')
 
 if (!gl) {
-  console.error('No webGL support')
+  console.error('No webGL 2 support')
 }
+
+const fetchShaderSource = async (name) => {
+  return await (await fetch(name)).text()
+}
+
+// load GLSL source
+const vertexShaderSource = await fetchShaderSource('vertexShader.glsl')
+const fragmentShaderSource = await fetchShaderSource('fragmentShader.glsl')
 
 // create shaders
 const vertexShader = gl.createShader(gl.VERTEX_SHADER)
 const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER)
-
-// load GLSL
-const vertexShaderSource = document.querySelector("#vertex-shader").innerHTML;
-const fragmentShaderSource = document.querySelector("#fragment-shader").innerHTML
 
 // compile shader from glsl to shader
 gl.shaderSource(vertexShader, vertexShaderSource)
@@ -38,15 +24,14 @@ gl.compileShader(vertexShader)
 gl.compileShader(fragmentShader)
 
 // check if anything wrong with compiling shader
+gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)
 if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
   console.error('ERROR compiling vertexShader, ', gl.getShaderInfoLog(vertexShader))
-  // return
 }
 
 // check if anything wrong with compiling shader
 if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
   console.error('ERROR compiling fragmentShader, ', gl.getShaderInfoLog(fragmentShader))
-  // return
 }
 
 // attach shaders to program
@@ -57,14 +42,13 @@ gl.linkProgram(program)
 
 // check if anything wrong with linking
 if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-  console.error('ERROR linking program, ', gl.getShaderInfoLog(program))
-  // return
+  console.error('ERROR linking program, ', gl.getProgramInfoLog(program))
 }
 
 // extra validation, not in production, only for testing
 gl.validateProgram(program)
-if (!gl.getProgramParameter(program, gl.VALIDATE_STATUE)) {
-  console.error('ERROR validating program, ', gl.getShaderInfoLog(program))
+if (!gl.getProgramParameter(program, gl.VALIDATE_STATUS)) {
+  console.error('ERROR validating program, ', gl.getProgramInfoLog(program))
 }
 
 
@@ -72,13 +56,13 @@ if (!gl.getProgramParameter(program, gl.VALIDATE_STATUE)) {
 
 // vertex data, which is accessible by CPU, but not GPU
 const vertices = [
- //x,    y,    z,    R,    G,    B
-   0,    1,    0,    1.0,  1.0,  0.0,
-   1,   -1,    0,    0.7,  0.0,  1.0,
-  -1,   -1,    0,    0.1,  1.0,  0.6,
+  //x,    y,    z,    R,    G,    B
+  0, 1, 0, 1.0, 1.0, 0.0,
+  1, -1, 0, 0.7, 0.0, 1.0,
+  -1, -1, 0, 0.1, 1.0, 0.6,
 ];
 
-// create buffer
+// create buffer, which is accessible by GPU   
 const buffer = gl.createBuffer()
 // bind buffer to the bind point named gl.ARRAY_BUFFER, bind point is where data from CPU goes to GPU
 gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
