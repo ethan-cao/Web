@@ -1,4 +1,5 @@
 import { compileShader, createProgram } from "./utils.js"
+import { mat4 } from 'gl-matrix'
 
 const canvas = document.querySelector('#canvas')
 const gl = canvas.getContext('webgl2')
@@ -7,8 +8,8 @@ if (!gl) {
   throw('No webGL 2 support')
 }
 
-const vertexShader = await compileShader(gl, 'src/shader/vertexShader.glsl', gl.VERTEX_SHADER)
-const fragmentShader = await compileShader(gl, 'src/shader/fragmentShader.glsl', gl.FRAGMENT_SHADER)
+const vertexShader = await compileShader(gl, '../src/shader/vertexShader.glsl', gl.VERTEX_SHADER)
+const fragmentShader = await compileShader(gl, '../src/shader/fragmentShader.glsl', gl.FRAGMENT_SHADER)
 const program = createProgram(gl, vertexShader, fragmentShader)
 
 
@@ -31,18 +32,20 @@ gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW)
 // inform vertexShader how its attributes (input) gets value 
 // get the location of attribute position (defined in vertexShader)
 const positionAttributeLocation = gl.getAttribLocation(program, 'position')
-// get the location of attribute color (defined in vertexShader)
-const colorAttributeLocation = gl.getAttribLocation(program, 'color')
-
-// load data from
+// specify in what order the attributes are stored in the buffer and what data type they are
 gl.vertexAttribPointer(
   positionAttributeLocation,  // attribute location
   3,                          // number of elements per attribute (x, y, z)
   gl.FLOAT,                   // type of element
   gl.FALSE,                   // is data normalized
-  6 * Float32Array.BYTES_PER_ELEMENT, // size of each vertex (x, y, z, R, G, B)
+  6 * Float32Array.BYTES_PER_ELEMENT, // stride, size of each vertex (x, y, z, R, G, B), the total byte length of all attributes for one vertex
   0                           // offset from the beginning of a vertex to this attribute
 )
+// tell WebGL that this attribute should be filled with data from array buffer
+gl.enableVertexAttribArray(positionAttributeLocation)
+
+
+const colorAttributeLocation = gl.getAttribLocation(program, 'color')
 gl.vertexAttribPointer(
   colorAttributeLocation,     // attribute location
   3,                          // number of elements per attribute (R, G, B)
@@ -51,10 +54,36 @@ gl.vertexAttribPointer(
   6 * Float32Array.BYTES_PER_ELEMENT, // size of each vertex  (x, y, z, R, G, B)
   3 * Float32Array.BYTES_PER_ELEMENT   // offset from the beginning of a vertex to this attribute (x, y, z)
 )
-gl.enableVertexAttribArray(positionAttributeLocation)
 gl.enableVertexAttribArray(colorAttributeLocation)
 
 
-// draw
+
 gl.useProgram(program)
+
+// location to GPU accessible variables
+const worldMatrixLocation = gl.getUniformLocation(program, 'worldMatrix')
+const viewMatrixLocation = gl.getUniformLocation(program, 'viewMatrix')
+const projectionMatrixLocation = gl.getUniformLocation(program, 'projectionMatrix')
+
+// CPU accessible variable
+const worldMatrix = new Float32Array(16)
+const viewMatrix = new Float32Array(16)
+const projectionMatrix = new Float32Array(16)
+mat4.identity(worldMatrix) // generate identity matrix in worldMatrix
+mat4.identity(viewMatrix)
+mat4.identity(projectionMatrix)
+
+// send CPU accessible variables to shader
+gl.uniform4fv(worldMatrixLocation, false, worldMatrix)
+gl.uniform4fv(viewMatrixLocation, false, viewMatrix)
+gl.uniform4fv(projectionMatrixLocation, false, projectionMatrix)
+
+// main render loop
+// const loop = () => {
+//   requestAnimationFrame(loop)
+// }
+
+// requestAnimationFrame(loop)
+
+// draw
 gl.drawArrays(gl.TRIANGLES, 0, 3)
