@@ -1,6 +1,8 @@
 import { compileShader, createProgram } from "./utils.js"
 import { mat4 } from 'gl-matrix'
 
+console.log('@')
+
 const canvas = document.querySelector('#canvas')
 const gl = canvas.getContext('webgl2')
 
