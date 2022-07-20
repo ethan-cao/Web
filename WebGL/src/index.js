@@ -1,17 +1,20 @@
 import { compileShader, createProgram } from "./utils.js"
 import { mat4 } from 'gl-matrix'
 
-console.log('@')
-
 const canvas = document.querySelector('#canvas')
+
+if (!canvas) {
+  throw('no canvas found')
+}
+
 const gl = canvas.getContext('webgl2')
 
 if (!gl) {
   throw('No webGL 2 support')
 }
 
-const vertexShader = await compileShader(gl, '../src/shader/vertexShader.glsl', gl.VERTEX_SHADER)
-const fragmentShader = await compileShader(gl, '../src/shader/fragmentShader.glsl', gl.FRAGMENT_SHADER)
+const vertexShader = await compileShader(gl, 'vertex', gl.VERTEX_SHADER)
+const fragmentShader = await compileShader(gl, 'fragment', gl.FRAGMENT_SHADER)
 const program = createProgram(gl, vertexShader, fragmentShader)
 
 

@@ -3,15 +3,32 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   mode: "development",
-  entry: {
-    index: "./src/index.js",
-  },
+  entry: './src/index.js',
   output: {
-    filename: "[name].bundle.js",
-    path: path.resolve(__dirname, "dist"),
-    publicPath: "/",
     clean: true,
+    filename: "[name].bundle.js",
+    path: path.resolve(__dirname, 'dist'),
+    // publicPath: "/",
   },
+  module: {
+    rules: [
+      {
+        test: /\.(glsl|vs|fs|vert|frag)$/,
+        use: [
+          'raw-loader',
+          'glslify-loader'
+        ],
+        exclude: /node_modules/,
+      }
+    ],
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: 'webGL',
+      template: 'src/index.html',
+      filename: 'index.html'
+    }),
+  ],
   devtool: "inline-source-map",
   devServer: {
     port: 9000,
@@ -20,20 +37,6 @@ module.exports = {
   },
   experiments: {
     topLevelAwait: true,
-  },
-  plugins: [
-    new HtmlWebpackPlugin({
-      title: 'Output',
-      filename: 'index.html'
-    }),
-  ],
-  module: {
-    rules: [
-      {
-        test: /\.html$/i,
-        loader: "html-loader",
-      },
-    ],
   },
   optimization: {
     runtimeChunk: "single",

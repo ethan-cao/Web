@@ -1,9 +1,20 @@
+import vertexShaderSource from 'raw-loader!glslify-loader!./shader/vertexShader.glsl'
+import fragmentShaderSource from 'raw-loader!glslify-loader!./shader/fragmentShader.glsl'
+
+// loading approach 1: using async loading
 const fetchShaderSource = async (name) => {
-  return await (await fetch(name)).text()
+  const path = name === 'vertex' ? '../src/shader/vertexShader.glsl' : '../src/shader/fragmentShader.glsl' 
+  return await (await fetch(path)).text()
 }
 
-export const compileShader = async (gl, shaderPath, shaderType) => {
-  const shaderSource = await fetchShaderSource(shaderPath)
+// loading approach 2: using webpack glsl loader
+const loadShaderSource = (name) => {
+  return name === 'vertex' ? vertexShaderSource : fragmentShaderSource
+}
+
+export const compileShader = async (gl, shaderName, shaderType) => {
+  // const shaderSource = await fetchShaderSource(shaderName)
+  const shaderSource = await loadShaderSource(shaderName)
 
   // create shaders
   const shader = gl.createShader(shaderType)
