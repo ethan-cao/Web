@@ -1,5 +1,7 @@
-import vertexShaderSource from 'raw-loader!glslify-loader!./shader/vertexShader.glsl'
-import fragmentShaderSource from 'raw-loader!glslify-loader!./shader/fragmentShader.glsl'
+// import vertexShaderSource from 'raw-loader!glslify-loader!./shader/vertexShader.glsl'
+// import fragmentShaderSource from 'raw-loader!glslify-loader!./shader/fragmentShader.glsl'
+import vertexShaderSource from './shader/vertexShader.glsl'
+import fragmentShaderSource from './shader/fragmentShader.glsl'
 
 // loading approach 1: using async loading
 const fetchShaderSource = async (name) => {
@@ -15,6 +17,8 @@ const loadShaderSource = (name) => {
 export const compileShader = async (gl, shaderName, shaderType) => {
   // const shaderSource = await fetchShaderSource(shaderName)
   const shaderSource = await loadShaderSource(shaderName)
+  
+  // console.log(`@@@ glsl source for ${shaderName}: `, shaderSource);
 
   // create shaders
   const shader = gl.createShader(shaderType)
@@ -26,6 +30,7 @@ export const compileShader = async (gl, shaderName, shaderType) => {
   // check if anything wrong with compiling shader
   gl.getShaderParameter(shader, gl.COMPILE_STATUS)
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    console.log(`@@@ error`)
     throw ('ERROR compiling vertexShader, ', gl.getShaderInfoLog(shader))
   }
 

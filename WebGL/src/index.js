@@ -62,7 +62,6 @@ gl.vertexAttribPointer(
 gl.enableVertexAttribArray(colorAttributeLocation)
 
 
-
 gl.useProgram(program)
 
 // location to GPU accessible variables
@@ -78,8 +77,10 @@ mat4.identity(worldMatrix) // generate identity matrix in worldMatrix
 mat4.identity(viewMatrix)
 mat4.identity(projectionMatrix)
 
+console.log('@@@ 1');
 // send CPU accessible variables to shader
 gl.uniform4fv(worldMatrixLocation, false, worldMatrix)
+console.log('@@@ 2');
 gl.uniform4fv(viewMatrixLocation, false, viewMatrix)
 gl.uniform4fv(projectionMatrixLocation, false, projectionMatrix)
 
