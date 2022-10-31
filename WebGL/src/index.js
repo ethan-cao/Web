@@ -46,7 +46,7 @@ gl.vertexAttribPointer(
   6 * Float32Array.BYTES_PER_ELEMENT, // stride, size of each vertex (x, y, z, R, G, B), the total byte length of all attributes for one vertex
   0                           // offset from the beginning of a vertex to this attribute
 )
-// tell WebGL that this attribute should be filled with data from array buffer
+// tell WebGL that this attribute should  be filled with data from array buffer
 gl.enableVertexAttribArray(positionAttributeLocation)
 
 
@@ -77,12 +77,10 @@ mat4.identity(worldMatrix) // generate identity matrix in worldMatrix
 mat4.identity(viewMatrix)
 mat4.identity(projectionMatrix)
 
-console.log('@@@ 1');
 // send CPU accessible variables to shader
-gl.uniform4fv(worldMatrixLocation, false, worldMatrix)
-console.log('@@@ 2');
-gl.uniform4fv(viewMatrixLocation, false, viewMatrix)
-gl.uniform4fv(projectionMatrixLocation, false, projectionMatrix)
+gl.uniformMatrix4fv(worldMatrixLocation, gl.FALSE, worldMatrix)
+gl.uniformMatrix4fv(viewMatrixLocation, gl.FALSE, viewMatrix)
+gl.uniformMatrix4fv(projectionMatrixLocation, gl.FALSE, projectionMatrix)
 
 // main render loop
 // const loop = () => {

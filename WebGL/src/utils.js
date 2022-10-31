@@ -30,7 +30,6 @@ export const compileShader = async (gl, shaderName, shaderType) => {
   // check if anything wrong with compiling shader
   gl.getShaderParameter(shader, gl.COMPILE_STATUS)
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    console.log(`@@@ error`)
     throw ('ERROR compiling vertexShader, ', gl.getShaderInfoLog(shader))
   }
 

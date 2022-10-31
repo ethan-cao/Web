@@ -3,7 +3,7 @@ precision mediump float;
 
 // attribute is the input for vertexShader
 attribute vec3 position;   // vec3: vector of 3 components, xyz
-attribute vec3 color;      // vec4: vector of 4 components, RGBA
+attribute vec3 color;      // v
 
 // varying is the output from vertexShader to fragmentShader
 varying vec3 fragColor;
@@ -17,8 +17,8 @@ uniform mat4 projectionMatrix;
 // all shaders have a main function
 void main() {
   // gl_Position is global var, which is used as the output of vertexShader
-  // operaton happens from right to left
-  gl_Position = projectionMatrix * viewMatrix * worldMatrix * vec4(position, 1);
+  // operation happens from right to left
+  gl_Position = projectionMatrix * viewMatrix * worldMatrix * vec4(position, 1.0);
 
   // fragColor is sent to fragmentShader
   fragColor = color;
