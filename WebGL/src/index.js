@@ -1,5 +1,5 @@
 import { compileShader, createProgram } from "./utils.js"
-import { mat4 } from 'gl-matrix'
+import { glMatrix, mat4 } from 'gl-matrix'
 
 const canvas = document.querySelector('#canvas')
 
@@ -73,21 +73,36 @@ const projectionMatrixLocation = gl.getUniformLocation(program, 'projectionMatri
 const worldMatrix = new Float32Array(16)
 const viewMatrix = new Float32Array(16)
 const projectionMatrix = new Float32Array(16)
+
+// worldMatrix handles rotation
 mat4.identity(worldMatrix) // generate identity matrix in worldMatrix
-mat4.identity(viewMatrix)
-mat4.identity(projectionMatrix)
+// viewMatrix creates camera
+mat4.lookAt(viewMatrix, [0, 0, -4], [0, 0, 0], [0, 1, 0])
+mat4.perspective(projectionMatrix, glMatrix.toRadian(45), canvas.width / canvas.height, 0.1, 1000)
 
 // send CPU accessible variables to shader
 gl.uniformMatrix4fv(worldMatrixLocation, gl.FALSE, worldMatrix)
 gl.uniformMatrix4fv(viewMatrixLocation, gl.FALSE, viewMatrix)
 gl.uniformMatrix4fv(projectionMatrixLocation, gl.FALSE, projectionMatrix)
 
+
+const identityMatrix = new Float32Array(16)
+mat4.identity(identityMatrix)
+
 // main render loop
-// const loop = () => {
-//   requestAnimationFrame(loop)
-// }
+const loop = () => {
+  const angle = performance.now() / 1000 / 6 * 2 * Math.PI  
+  mat4.rotate(worldMatrix, identityMatrix, angle, [0, 1, 0])
+  gl.uniformMatrix4fv(worldMatrixLocation, gl.FALSE, worldMatrix)
 
-// requestAnimationFrame(loop)
+  // clean previous draw
+  gl.clearColor(0.75, 0.85, 0.8, 1.0)
+  gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT)
 
-// draw
-gl.drawArrays(gl.TRIANGLES, 0, 3)
+  // draw
+  gl.drawArrays(gl.TRIANGLES, 0, 3)
+  
+  requestAnimationFrame(loop)
+}
+
+requestAnimationFrame(loop)
