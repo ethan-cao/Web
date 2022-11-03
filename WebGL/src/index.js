@@ -9,12 +9,13 @@ if (!canvas) {
 }
 
 const gl = canvas.getContext('webgl2')
+window.gl = gl
 
 if (!gl) {
   throw('No webGL 2 support')
 }
 
-
+// set texture
 const image = document.querySelector('#image')
 image.src = crate
 
@@ -33,7 +34,7 @@ const program = createProgram(gl, vertexShader, fragmentShader)
 
 
 // vertex data, accessible by CPU, but not GPU
-const boxVertices = 
+const boxVerticesWithColor =  
 [ // X, Y, Z           R, G, B
   // Top
   -1.0, 1.0, -1.0,   0.5, 0.5, 0.5,    // 0th vertex
@@ -72,6 +73,45 @@ const boxVertices =
   1.0, -1.0, -1.0,    0.5, 0.5, 1.0,
 ];
 
+const boxVerticesWithTexture =  [ 
+  // X, Y, Z         U,   V  
+  // Top
+  -1.0, 1.0, -1.0,   0, 0,    // 0th vertex
+  -1.0, 1.0, 1.0,    0, 1,    // 1st vertex
+  1.0, 1.0, 1.0,     1, 1,    // 2nd vertex 
+  1.0, 1.0, -1.0,    1, 0,
+
+    // Left
+  -1.0, 1.0, 1.0, 0, 0,
+  -1.0, -1.0, 1.0, 1, 0,
+  -1.0, -1.0, -1.0, 1, 1,
+  -1.0, 1.0, -1.0, 0, 1,
+
+  // Right
+  1.0, 1.0, 1.0, 1, 1,
+  1.0, -1.0, 1.0, 0, 1,
+  1.0, -1.0, -1.0, 0, 0,
+  1.0, 1.0, -1.0, 1, 0,
+
+  // Front
+  1.0, 1.0, 1.0, 1, 1,
+  1.0, -1.0, 1.0, 1, 0,
+  -1.0, -1.0, 1.0, 0, 0,
+  -1.0, 1.0, 1.0, 0, 1,
+
+  // Back
+  1.0, 1.0, -1.0, 0, 0,
+  1.0, -1.0, -1.0, 0, 1,
+  -1.0, -1.0, -1.0, 1, 1,
+  -1.0, 1.0, -1.0, 1, 0,
+
+  // Bottom
+  -1.0, -1.0, -1.0, 1, 1,
+  -1.0, -1.0, 1.0, 1, 0,
+  1.0, -1.0, 1.0, 0, 0,
+  1.0, -1.0, -1.0, 0, 1,
+];
+
 const boxIndices =
 [  
   // number is index in boxVertices
@@ -106,7 +146,7 @@ const vertexBuffer = gl.createBuffer()
 // bind buffer to the bind point named gl.ARRAY_BUFFER, bind point is where data from CPU goes to GPU
 gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer)
 // send vertices in CPU to buffer in GPU through gl.ARRAY_BUFFER
-gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(boxVertices), gl.STATIC_DRAW)
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(boxVerticesWithTexture), gl.STATIC_DRAW)
 
 
 
@@ -114,6 +154,9 @@ gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(boxVertices), gl.STATIC_DRAW)
 const indexBuffer = gl.createBuffer()
 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer)
 gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(boxIndices), gl.STATIC_DRAW)
+
+
+
 
 
 // inform vertexShader how its attributes (input) gets value 
@@ -125,23 +168,52 @@ gl.vertexAttribPointer(
   3,                          // number of elements per attribute (x, y, z)
   gl.FLOAT,                   // type of element
   gl.FALSE,                   // is data normalized
-  6 * Float32Array.BYTES_PER_ELEMENT, // stride, size of each vertex (x, y, z, R, G, B), the total byte length of all attributes for one vertex
+  // 6 * Float32Array.BYTES_PER_ELEMENT, // stride, size of each vertex (x, y, z, R, G, B), the total byte length of all attributes for one vertex
+  5 * Float32Array.BYTES_PER_ELEMENT,    // (x, y, z, texture_x, texture_y)
   0                           // offset from the beginning of a vertex to this attribute
 )
 // tell WebGL that this attribute should  be filled with data from array buffer
 gl.enableVertexAttribArray(positionAttributeLocation)
 
 
-const colorAttributeLocation = gl.getAttribLocation(program, 'color')
+// const colorAttributeLocation = gl.getAttribLocation(program, 'color')
+// gl.vertexAttribPointer(
+//   colorAttributeLocation,     // attribute location
+//   3,                          // number of elements per attribute (R, G, B)
+//   gl.FLOAT,                   // type of element
+//   gl.FALSE,                   // is data normalized
+//   6 * Float32Array.BYTES_PER_ELEMENT, // size of each vertex  (x, y, z, R, G, B)
+//   3 * Float32Array.BYTES_PER_ELEMENT   // offset from the beginning of a vertex to this attribute (x, y, z)
+// )
+// gl.enableVertexAttribArray(colorAttributeLocation)
+
+
+const textureCoordAttributeLocation = gl.getAttribLocation(program, 'textureCoord')
 gl.vertexAttribPointer(
-  colorAttributeLocation,     // attribute location
-  3,                          // number of elements per attribute (R, G, B)
+  textureCoordAttributeLocation,    
+  2,                          // number of elements per attribute (x, y) texture coordinates 
   gl.FLOAT,                   // type of element
   gl.FALSE,                   // is data normalized
-  6 * Float32Array.BYTES_PER_ELEMENT, // size of each vertex  (x, y, z, R, G, B)
+  5 * Float32Array.BYTES_PER_ELEMENT, // size of each vertex  (x, y, z, R, G, B)
   3 * Float32Array.BYTES_PER_ELEMENT   // offset from the beginning of a vertex to this attribute (x, y, z)
 )
-gl.enableVertexAttribArray(colorAttributeLocation)
+gl.enableVertexAttribArray(textureCoordAttributeLocation)
+
+
+
+// create texture
+const boxTexture = gl.createTexture()
+gl.bindTexture(gl.TEXTURE_2D, boxTexture);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+// specify what to use as texture
+gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, document.querySelector('#image')) 
+ // good practice, always unbind after
+gl.bindTexture(gl.TEXTURE_2D, null) 
+
+
 
 
 gl.useProgram(program)
@@ -159,7 +231,7 @@ const projectionMatrix = new Float32Array(16)
 // worldMatrix handles rotation
 mat4.identity(worldMatrix) // generate identity matrix in worldMatrix
 // viewMatrix creates camera
-mat4.lookAt(viewMatrix, [0, 0, -10], [0, 0, 0], [0, 1, 0])
+mat4.lookAt(viewMatrix, [0, 0, -5], [0, 0, 0], [0, 1, 0])
 mat4.perspective(projectionMatrix, glMatrix.toRadian(45), canvas.clientWidth / canvas.clientHeight, 0.1, 1000.0);
 
 // send CPU accessible variables to shader
@@ -187,6 +259,11 @@ const loop = () => {
   // clean previous draw
   gl.clearColor(0.75, 0.85, 0.8, 1.0);
   gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
+
+  //
+  gl.bindTexture(gl.TEXTURE_2D, boxTexture);
+  gl.activeTexture(gl.TEXTURE0); // bind the 0 sampler
+
 
   // draw
   gl.drawElements(gl.TRIANGLES, boxIndices.length, gl.UNSIGNED_SHORT, 0);
