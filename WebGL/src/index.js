@@ -1,5 +1,6 @@
-import { compileShader, createProgram } from "./utils.js"
 import { glMatrix, mat4 } from 'gl-matrix'
+import { compileShader, createProgram } from "./utils.js"
+import crate from './assets/crate.png'
 
 const canvas = document.querySelector('#canvas')
 
@@ -13,8 +14,14 @@ if (!gl) {
   throw('No webGL 2 support')
 }
 
+
+const image = document.querySelector('#image')
+image.src = crate
+
+
 gl.enable(gl.DEPTH_TEST)
 
+// avoid unnecessary calculation
 gl.enable(gl.CULL_FACE)
 gl.frontFace(gl.CCW)
 gl.cullFace(gl.BACK)

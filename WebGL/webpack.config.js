@@ -8,6 +8,7 @@ module.exports = {
     clean: true,
     path: path.resolve(__dirname, 'dist'),
     filename: "[name].bundle.js",
+    assetModuleFilename: 'assets/[hash][ext][query]'
     // publicPath: "/",
   },
   module: {
@@ -19,7 +20,11 @@ module.exports = {
           'glslify-loader'
         ],
         exclude: /node_modules/,
-      }
+      },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: 'asset/resource',
+      },
     ],
   },
   plugins: [
