@@ -215,8 +215,9 @@ gl.bindTexture(gl.TEXTURE_2D, null)
 
 
 
-
 gl.useProgram(program)
+
+
 
 // location to GPU accessible variables
 const worldMatrixLocation = gl.getUniformLocation(program, 'worldMatrix')
@@ -224,20 +225,23 @@ const viewMatrixLocation = gl.getUniformLocation(program, 'viewMatrix')
 const projectionMatrixLocation = gl.getUniformLocation(program, 'projectionMatrix')
 
 // CPU accessible variable
+// worldMatrix handles rotation
 const worldMatrix = new Float32Array(16)
+// viewMatrix creates camera
 const viewMatrix = new Float32Array(16)
+// 
 const projectionMatrix = new Float32Array(16)
 
-// worldMatrix handles rotation
 mat4.identity(worldMatrix) // generate identity matrix in worldMatrix
-// viewMatrix creates camera
 mat4.lookAt(viewMatrix, [0, 0, -5], [0, 0, 0], [0, 1, 0])
 mat4.perspective(projectionMatrix, glMatrix.toRadian(45), canvas.clientWidth / canvas.clientHeight, 0.1, 1000.0);
 
 // send CPU accessible variables to shader
+// 4fv: 4*4 float vector
 gl.uniformMatrix4fv(worldMatrixLocation, gl.FALSE, worldMatrix)
 gl.uniformMatrix4fv(viewMatrixLocation, gl.FALSE, viewMatrix)
 gl.uniformMatrix4fv(projectionMatrixLocation, gl.FALSE, projectionMatrix)
+
 
 
 const xRotationMatrix = new Float32Array(16)
@@ -248,7 +252,7 @@ mat4.identity(identityMatrix)
 
 
 // main render loop
-const loop = () => {
+const mainLoop = () => {
   // rotation
   const angle = performance.now() / 1000 / 6 * 2 * Math.PI  
   mat4.rotate(yRotationMatrix, identityMatrix, angle, [0, 1, 0])
@@ -268,7 +272,7 @@ const loop = () => {
   // draw
   gl.drawElements(gl.TRIANGLES, boxIndices.length, gl.UNSIGNED_SHORT, 0);
   
-  requestAnimationFrame(loop)
+  requestAnimationFrame(mainLoop)
 }
 
-requestAnimationFrame(loop)
+mainLoop()
