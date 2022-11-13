@@ -19,13 +19,14 @@ if (!gl) {
 const image = document.querySelector('#image')
 image.src = crate
 
-
+// depth test, let vertex closer to camera takes precedence over other vertex
 gl.enable(gl.DEPTH_TEST)
 
 // avoid unnecessary calculation
 gl.enable(gl.CULL_FACE)
 gl.frontFace(gl.CCW)
 gl.cullFace(gl.BACK)
+
 
 
 const vertexShader = await compileShader(gl, 'vertex', gl.VERTEX_SHADER)
@@ -112,6 +113,7 @@ const boxVerticesWithTexture =  [
   1.0, -1.0, -1.0, 0, 1,
 ];
 
+//  Element Array: an array of indexes into the vertex array that select which vertices get rendered later
 const boxIndices =
 [  
   // number is index in boxVertices
@@ -225,16 +227,22 @@ const viewMatrixLocation = gl.getUniformLocation(program, 'viewMatrix')
 const projectionMatrixLocation = gl.getUniformLocation(program, 'projectionMatrix')
 
 // CPU accessible variable
-// worldMatrix handles rotation
+// worldMatrix handles transformation, rotation of the vertices
 const worldMatrix = new Float32Array(16)
-// viewMatrix creates camera
+// viewMatrix creates camera, camera never moves, always stay at origin
 const viewMatrix = new Float32Array(16)
-// 
+// projectionMatrix controls from which perspective looking at vertices
 const projectionMatrix = new Float32Array(16)
 
 mat4.identity(worldMatrix) // generate identity matrix in worldMatrix
-mat4.lookAt(viewMatrix, [0, 0, -5], [0, 0, 0], [0, 1, 0])
-mat4.perspective(projectionMatrix, glMatrix.toRadian(45), canvas.clientWidth / canvas.clientHeight, 0.1, 1000.0);
+mat4.lookAt(viewMatrix, [0, 0, -10], [0, 0, 0], [0, 1, 0])
+mat4.perspective(
+  projectionMatrix, 
+  glMatrix.toRadian(45),  // vertical field-of-view in angle radians
+  canvas.clientWidth / canvas.clientHeight,   // aspect ratio
+  0.1,    // near cull distance, once the object is 0.1 close to the camera, it gets hidden
+  1000.0  // far cull distance, once the object is 1000 distance to the camera, it gets cut hidden
+);
 
 // send CPU accessible variables to shader
 // 4fv: 4*4 float vector
@@ -252,7 +260,7 @@ mat4.identity(identityMatrix)
 
 
 // main render loop
-const mainLoop = () => {
+const main = () => {
   // rotation
   const angle = performance.now() / 1000 / 6 * 2 * Math.PI  
   mat4.rotate(yRotationMatrix, identityMatrix, angle, [0, 1, 0])
@@ -272,7 +280,7 @@ const mainLoop = () => {
   // draw
   gl.drawElements(gl.TRIANGLES, boxIndices.length, gl.UNSIGNED_SHORT, 0);
   
-  requestAnimationFrame(mainLoop)
+  requestAnimationFrame(main)
 }
 
-mainLoop()
+main()

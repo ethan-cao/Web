@@ -11,7 +11,7 @@ varying vec3 fragColor;
 varying vec2 fragTextureCoord;
 
 
-// shared variables between shaders, accessible by both GPU and CPU
+// shared variables between shaders, read-only, accessible by both GPU and CPU
 // mat4: 4*4 matrix
 uniform mat4 worldMatrix;  // rotate in 3D space 
 uniform mat4 viewMatrix;   // camera position
