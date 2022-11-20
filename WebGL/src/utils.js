@@ -1,7 +1,7 @@
-// import vertexShaderSource from 'raw-loader!glslify-loader!./shader/vertexShader.glsl'
-// import fragmentShaderSource from 'raw-loader!glslify-loader!./shader/fragmentShader.glsl'
 import vertexShaderSource from './shader/vertexShader.glsl'
 import fragmentShaderSource from './shader/fragmentShader.glsl'
+// import vertexShaderSource from './shader/vertexShader_points.glsl'
+// import fragmentShaderSource from './shader/fragmentShader_points.glsl'
 
 // loading approach 1: using async loading
 const fetchShaderSource = async (name) => {
