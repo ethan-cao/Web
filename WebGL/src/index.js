@@ -1,6 +1,7 @@
 import { glMatrix, mat4 } from 'gl-matrix'
 import { compileShader, createProgram } from "./utils.js"
 import crate from './assets/crate.png'
+import neo4j from './assets/neo4j.png'
 
 const canvas = document.querySelector('#canvas')
 
@@ -17,7 +18,7 @@ if (!gl) {
 
 // set texture
 const image = document.querySelector('#image')
-image.src = crate
+image.src = neo4j
 
 // depth test, let vertex closer to camera takes precedence over other vertex
 gl.enable(gl.DEPTH_TEST)
