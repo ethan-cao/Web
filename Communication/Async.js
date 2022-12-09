@@ -1,70 +1,48 @@
-// Callback 
-function addString1(previous, current, callback) {
-	setTimeout(() => callback(previous + " " + current), 1000);
+// Callback  version
+const callbackTest = (onSuccess, onFail) => {
+	if (Math.random() * 100 < 80) {
+		onSuccess("80%");
+		return
+	}
+
+	onFail('20%')
+	return
 }
 
-function addAll1() {
-	addString1("", "A", (result) => {
-		addString1(result, "B", (result) => {
-			addString1(result, "C", (result) => {
-				console.log(result); // Prints out " A B C"
-			});
-		});
-	});
-}
+callbackTest(
+	(successValue) => console.log(successValue),
+	(failedValue) => console.log(failedValue)
+)
 
-// addAll1();
 
-//---------------------------------------------------------------------
+
 // Promise version
+const promiseTest = () => new Promise((resolve, reject) => {
+	if (Math.random() * 100 < 80) {
+		resolve("80%");
+	}
 
-const addString2 = (previous, current) =>
-	new Promise((resolve) => {
-		setTimeout(resolve(previous + " " + current), 1000)
-	});
+	reject('20%')
+})
 
-const addAll2 = () =>
-	addString2("", "A")
-		.then((result) => {
-			return addString2(result, "B");
-		})
-		.then((result) => {
-			return addString2(result, "C");
-		})
-		.then((result) => {
-			console.log(result); // A B C
-		});
-// addAll2();
+promiseTest().then(
+	(successValue) => console.log(successValue),
+	(failedValue) => console.log(failedValue)
+)
 
 
-//---------------------------------------------------------------------
-// Await version
 
-const addString3 = (previous, current) =>
-	new Promise((resolve) => {
-		setTimeout(() => resolve(previous + " " + current), 3000);
-	});
-
-async function addAll3() {
-	let result = "";
-
-	result = await addString3(result, "A"); // wait until addString() returns a promise
-	result = await addString3(result, "B"); // wait until addString() returns a promise
-	result = await addString3(result, "C"); // wait until addString() returns a promise
-
-	// without await, everything executed synchronously, result is a resolved promise
-
-	console.log("all resolved: ", result);
-	return result;
+// Async/Await version
+const awaitTest = async function () {
+	try {
+		const result = await promiseTest()
+		console.log(result)
+	} catch (e) {
+		console.error(e)
+	}
 }
 
-let p = addAll3();
-// p is a pending promise right after calling addAll(),
-// after 9s, it becomes resolved promise with value: A B C
-// nothing is blocking in this context
+awaitTest()
 
 
-
-
-//---------------------------------------------------------------------
 // Observable version

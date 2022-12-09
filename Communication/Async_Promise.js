@@ -16,7 +16,7 @@ promise help to avoid nested callbacks
 
 /*  Promise constructor takes 1 parameter, an executor function 
 
-    Executor works asynchronously, it takes 2 parameters resolve() and reject()
+    Executor function works asynchronously, it takes 2 parameters resolve() and reject()
     the first time, resolve/reject is invoked, the invocation determines the status of the promise
     executor is invoked only once
 
@@ -63,7 +63,7 @@ if resolve/reject
   throws an error, promise returned by promise.then() is rejected with the exception as reason
   is not a function, promise(p2) returned by promise.then() has the same state and value (as p2)
 */
-  
+
 promise.then(
   resolvedValue => console.log(resolvedValue),
   rejectedValue => console.log(rejectedValue)
@@ -73,7 +73,7 @@ promise.then(
 
 
 // promise.then() can be called more than once and chain to aggregate callbacks.
-  delay(2000) // return a promise
+delay(2000) // return a promise
   .then(() => {
     console.log("Resolved after 2 seconds");
     return delay(1500);  // return a promise
