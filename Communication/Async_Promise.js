@@ -12,8 +12,6 @@ subsequent invocation to resolve()/reject() does not change the promise (immutab
 promise help to avoid nested callbacks 
 */
 
-
-
 /*  Promise constructor takes 1 parameter, an executor function 
 
     Executor function works asynchronously, it takes 2 parameters resolve() and reject()
@@ -30,18 +28,16 @@ promise help to avoid nested callbacks
 */
 const promise = new Promise((resolve, reject) => {
   if (Math.random() * 100 < 90) {
-    resolve("90%");
+    resolve('90%')
   }
 
-  reject("10%");
+  reject('10%')
   // even if resolve() is called, reject() is still get called
   // but since the promise is already settled, subsequent reject call does not change the promise status
-});
+})
 
 // wrap promise constructor in functions if need to be invoked later
-const delay = (time) => new Promise((resolve) => setTimeout(resolve, time));
-
-
+const delay = time => new Promise(resolve => setTimeout(resolve, time))
 
 /*
 Promise does not expose its status, 
@@ -67,40 +63,35 @@ if resolve/reject
 promise.then(
   resolvedValue => console.log(resolvedValue),
   rejectedValue => console.log(rejectedValue)
-);
-
-
-
+)
 
 // promise.then() can be called more than once and chain to aggregate callbacks.
 delay(2000) // return a promise
   .then(() => {
-    console.log("Resolved after 2 seconds");
-    return delay(1500);  // return a promise
+    console.log('Resolved after 2 seconds')
+    return delay(1500) // return a promise
   })
   .then(() => {
-    console.log("Resolved after 1.5 seconds");
-    return delay(3000);   // return a promise
+    console.log('Resolved after 1.5 seconds')
+    return delay(3000) // return a promise
   })
   .then(() => {
-    console.log("Resolved after 3 seconds");
-    throw new Error();
+    console.log('Resolved after 3 seconds')
+    throw new Error()
   })
   .catch(() => {
-    // catch(reject) catches error thrown from both previous then(resolve, reject) and the resolve (param in then) 
+    // catch(reject) catches error thrown from both previous then(resolve, reject) and the resolve (param in then)
     // good practice: ending all promise chains with a .catch()
-    console.log("Caught an error.");
+    console.log('Caught an error.')
   })
   .finally(
     // avoid duplicating code in both the promise's then() and catch() handlers.
-    () => console.log("finally")
-  );
+    () => console.log('finally')
+  )
 
-
-
-//  Do not call Promise.resolve on a thenable that resolves to itself. 
+//  Do not call Promise.resolve on a thenable that resolves to itself.
 
 // Promise.resolve() returns a resolved promise.
-// Promise.reject() returns a rejected promise.
+// Promise.reject()  returns a rejected promise.
 // Promise.race() takes an array (or any iterable) and returns a promise that resolves with the value of the first resolved promise in the iterable, or rejects with the reason of the first promise that rejects.
 // Promise.all() takes an array (or any iterable) and returns a promise that resolves when all of the promises in the iterable argument have resolved, or rejects with the reason of the first passed promise that rejects.
