@@ -1,6 +1,0 @@
-
-
-
-
-
-// unload web worker
